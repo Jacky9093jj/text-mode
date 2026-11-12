@@ -16,9 +16,14 @@ function getOptions(callback) {
 // DOM ELEMENTS
 // ————————————————————————————————————
 const optionsForm = document.getElementById("optionsForm");
-const imageReplacementInputs = optionsForm.querySelectorAll(
-  'input[name="imageReplacement"]'
-);
+const imageReplacementInputs = optionsForm.querySelectorAll('input[name="imageReplacement"]');
+const whiteListInput = document.getElementById("whiteListInput");
+const submitBtn = document.getElementById("submitBtn");
+const savedWebsiteDiv = document.getElementById("savedWebsite");
+const savedWebsiteList = [];
+
+
+
 
 // ————————————————————————————————————
 // LOAD INITIAL OPTIONS
@@ -48,11 +53,30 @@ getOptions(() => {
   });
   setHeadClasses();
 });
+
+function displaySavedWebsite () {
+  savedWebsiteDiv.innerHTML = "";
+  for (let i = 0; i < savedWebsiteList.length; i++) {
+    savedWebsiteDiv.innerHTML += "<li>" + savedWebsiteList[i] + "<button type='button' id='deleteBtn" + i + "'>delete</button></li>"; 
+  }
+
+  for (let i = 0; i < savedWebsiteList.length; i++) {
+    document.getElementById("deleteBtn" + i).addEventListener("click", function(){
+      savedWebsiteList.splice(i, 1);
+      displaySavedWebsite();
+    });
+  }
+};
+displaySavedWebsite();
 // ————————————————————————————————————
 // EVENT LISTENERS - SAVE OPTIONS
 // ————————————————————————————————————
 // Immediately persist options changes
 // ————————————————————————————————————
+optionsForm.addEventListener("submit", function(event) {
+  event.preventDefault();
+});
+
 optionsForm.adjust_saturation_el.addEventListener("change", (event) => {
   options.config_adjust_saturation = event.target.checked;
   chrome.storage.sync.set({ options });
@@ -77,6 +101,23 @@ optionsForm.adjust_video_el.addEventListener("change", (event) => {
 
   setHeadClasses();
 });
+
+whiteListInput.addEventListener("keydown", function(event){
+  if (event.key === "Enter" && whiteListInput.value != ""){
+    savedWebsiteList.push(whiteListInput.value);
+    whiteListInput.value = "";
+    displaySavedWebsite();
+  }
+})
+
+submitBtn.addEventListener("click", function(){
+  if (whiteListInput.value != ""){
+    savedWebsiteList.push(whiteListInput.value);
+  }
+  whiteListInput.value = "";
+  displaySavedWebsite();
+})
+
 // ————————————————————————————————————
 imageReplacementInputs.forEach((input) => {
   input.addEventListener("change", handleImageReplacementClick);
