@@ -20,7 +20,6 @@ const imageReplacementInputs = optionsForm.querySelectorAll('input[name="imageRe
 const whiteListInput = document.getElementById("whiteListInput");
 const submitBtn = document.getElementById("submitBtn");
 const savedWebsiteDiv = document.getElementById("savedWebsite");
-const savedWebsiteList = [];
 
 
 
@@ -54,16 +53,27 @@ getOptions(() => {
   setHeadClasses();
 });
 
+let tempList = [];
+
+(async () => {
+  const result = await browser.storage.local.get({ savedWebsiteList: [] });
+  tempList = result.savedWebsiteList;
+  displaySavedWebsite();
+})();
+
 function displaySavedWebsite () {
   savedWebsiteDiv.innerHTML = "";
-  for (let i = 0; i < savedWebsiteList.length; i++) {
-    savedWebsiteDiv.innerHTML += "<li>" + savedWebsiteList[i] + "<button type='button' id='deleteBtn" + i + "'>delete</button></li>"; 
+  for (let i = 0; i < tempList.length; i++) {
+    savedWebsiteDiv.innerHTML += "<li>" + tempList[i] + "<button type='button' id='deleteBtn" + i + "'>delete</button></li>"; 
   }
 
-  for (let i = 0; i < savedWebsiteList.length; i++) {
+  for (let i = 0; i < tempList.length; i++) {
     document.getElementById("deleteBtn" + i).addEventListener("click", function(){
-      savedWebsiteList.splice(i, 1);
+      tempList.splice(i, 1);
+      browser.storage.local.set({savedWebsiteList:tempList});
       displaySavedWebsite();
+
+
     });
   }
 };
@@ -103,18 +113,20 @@ optionsForm.adjust_video_el.addEventListener("change", (event) => {
 });
 
 whiteListInput.addEventListener("keydown", function(event){
-  if (event.key === "Enter" && whiteListInput.value != ""){
-    savedWebsiteList.push(whiteListInput.value);
+  if (event.key === "Enter" && whiteListInput.value.trim() != ""){
+    tempList.push(whiteListInput.value);
     whiteListInput.value = "";
+    browser.storage.local.set({savedWebsiteList:tempList});
     displaySavedWebsite();
   }
 })
 
 submitBtn.addEventListener("click", function(){
   if (whiteListInput.value != ""){
-    savedWebsiteList.push(whiteListInput.value);
+    tempList.push(whiteListInput.value);
   }
   whiteListInput.value = "";
+  browser.storage.local.set({savedWebsiteList:tempList});
   displaySavedWebsite();
 })
 

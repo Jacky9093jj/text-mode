@@ -13,8 +13,17 @@
 
 //————————————————————————————————————
 // Get Preferences from the Extension
-
+(() => {
 let isEnabled = false;
+const currentUrl = window.location.href.toLocaleLowerCase();
+const testingList = ["youtube.com"];
+ 
+
+for (let i = 0; i < testingList.length; i++){
+  if (currentUrl.includes(testingList[i])){
+    return;
+  }
+}
 // let config_adjust_saturation = false;
 // let config_adjust_white_bg = false;
 // let config_img_bg_type = "stripes-50";
@@ -36,6 +45,7 @@ function getMode() {
       config_img_bg_type = response.config_img_bg_type;
       config_img_bg_opacity = response.config_img_bg_opacity;
       config_img_bg_use_stripes = response.config_img_bg_use_stripes;
+      
 
       injectCustomCSS();
       setBodyClasses();
@@ -49,6 +59,7 @@ getMode();
 
 // ————————————————————————————————————
 document.addEventListener("DOMContentLoaded", () => {
+
   injectCustomCSS();
   setBodyClasses();
   replaceBase64Images();
@@ -177,3 +188,4 @@ function setBodyClasses() {
     replaceVideos(); // Add this line
   }
 }
+})();

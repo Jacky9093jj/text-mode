@@ -194,6 +194,7 @@ function applyBlockingRules() {
         condition: {
           urlFilter: "*",
           resourceTypes: elementsToBlock,
+          excludedInitiatorDomains:["123"],
           //   resourceTypes: [
           //     "image",
           //     "object",
