@@ -13,14 +13,15 @@
 
 //————————————————————————————————————
 // Get Preferences from the Extension
-(() => {
+(async() => {
 let isEnabled = false;
 const currentUrl = window.location.href.toLocaleLowerCase();
-const testingList = ["youtube.com"];
+const result = await chrome.storage.local.get("savedWebsiteList");
+const tempList = result.savedWebsiteList;
  
 
-for (let i = 0; i < testingList.length; i++){
-  if (currentUrl.includes(testingList[i])){
+for (let i = 0; i < tempList.length; i++){
+  if (currentUrl.includes(tempList[i])){
     return;
   }
 }

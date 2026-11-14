@@ -19,6 +19,7 @@
 
 let options;
 
+
 function setDefaultOptions() {
   // Very first session ever running the extensions by the user
   options.enable_all = false;
@@ -171,10 +172,13 @@ function setListeners() {
     }
   });
 }
+chrome.storage.local.onChanged.addListener(applyBlockingRules);
 
 const imageReplacement = chrome.runtime.getURL("imgs/bg/bg_blank_1px.png");
-function applyBlockingRules() {
+async function applyBlockingRules() {
   //   console.log("applyBlockingRules");
+  const result = await chrome.storage.local.get("savedWebsiteList");
+  tempList = result.savedWebsiteList;
 
   let elementsToBlock = options.config_adjust_video
     ? ["image", "object", "media"]
@@ -194,7 +198,7 @@ function applyBlockingRules() {
         condition: {
           urlFilter: "*",
           resourceTypes: elementsToBlock,
-          excludedInitiatorDomains:["123"],
+          excludedInitiatorDomains:tempList,
           //   resourceTypes: [
           //     "image",
           //     "object",

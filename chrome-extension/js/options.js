@@ -56,7 +56,7 @@ getOptions(() => {
 let tempList = [];
 
 (async () => {
-  const result = await browser.storage.local.get({ savedWebsiteList: [] });
+  const result = await chrome.storage.local.get({ savedWebsiteList: [] });
   tempList = result.savedWebsiteList;
   displaySavedWebsite();
 })();
@@ -70,14 +70,13 @@ function displaySavedWebsite () {
   for (let i = 0; i < tempList.length; i++) {
     document.getElementById("deleteBtn" + i).addEventListener("click", function(){
       tempList.splice(i, 1);
-      browser.storage.local.set({savedWebsiteList:tempList});
+      chrome.storage.local.set({savedWebsiteList:tempList});
       displaySavedWebsite();
 
 
     });
   }
 };
-displaySavedWebsite();
 // ————————————————————————————————————
 // EVENT LISTENERS - SAVE OPTIONS
 // ————————————————————————————————————
@@ -116,7 +115,7 @@ whiteListInput.addEventListener("keydown", function(event){
   if (event.key === "Enter" && whiteListInput.value.trim() != ""){
     tempList.push(whiteListInput.value);
     whiteListInput.value = "";
-    browser.storage.local.set({savedWebsiteList:tempList});
+    chrome.storage.local.set({savedWebsiteList:tempList});
     displaySavedWebsite();
   }
 })
@@ -126,7 +125,7 @@ submitBtn.addEventListener("click", function(){
     tempList.push(whiteListInput.value);
   }
   whiteListInput.value = "";
-  browser.storage.local.set({savedWebsiteList:tempList});
+  chrome.storage.local.set({savedWebsiteList:tempList});
   displaySavedWebsite();
 })
 
