@@ -98,7 +98,7 @@ function refreshTab(tabId) {
 //------------------------------------------------
 // ENABLE / DISABLE Mode
 //------------------------------------------------
-function getIsEnableAll(callback) {
+async function getIsEnableAll(callback) {
   chrome.storage.sync.get("options", (data) => {
     // const options = data.options || {};
     options = data.options || {};
@@ -136,6 +136,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     chrome.storage.sync.get("options", (data) => {
       // const options = data.options || {};
       options = data.options || {};
+      if (!options.enable_all){
+        sendResponse(null);
+        return;
+      }
       const response = {
         enableAll: options.enable_all === true,
         config_adjust_saturation: options.config_adjust_saturation === true,
