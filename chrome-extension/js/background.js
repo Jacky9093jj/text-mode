@@ -98,7 +98,7 @@ function refreshTab(tabId) {
 //------------------------------------------------
 // ENABLE / DISABLE Mode
 //------------------------------------------------
-async function getIsEnableAll(callback) {
+function getIsEnableAll(callback) {
   chrome.storage.sync.get("options", (data) => {
     // const options = data.options || {};
     options = data.options || {};
